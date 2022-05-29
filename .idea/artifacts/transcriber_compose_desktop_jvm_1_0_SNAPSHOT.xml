@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="transcriber_compose_desktop-jvm-1.0-SNAPSHOT">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="transcriber_compose_desktop-jvm-1.0-SNAPSHOT.jar">
+      <element id="module-output" name="transcriber_compose_desktop.jvmMain" />
+    </root>
+  </artifact>
+</component>
