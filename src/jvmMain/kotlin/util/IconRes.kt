@@ -124,6 +124,20 @@ object IconRes {
         )
     }
 
+    @Composable
+    fun back(
+        tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current),
+        modifier: Modifier = Modifier.size(24.dp),
+    ) {
+        val iconPath = "ic_back.svg"
+        Icon(
+            painter = loadSvgPainter(File(path + iconPath), LocalDensity.current),
+            contentDescription = "back arrow",
+            modifier = modifier,
+            tint = tint
+        )
+    }
+
 
     private fun loadSvgPainter(file: File, density: Density): Painter =
         file.inputStream().buffered().use { androidx.compose.ui.res.loadSvgPainter(it, density) }

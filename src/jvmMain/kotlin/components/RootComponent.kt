@@ -5,11 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.window.ApplicationScope
 import util.asContent
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.childContext
-import com.arkivanov.decompose.router.pop
-import com.arkivanov.decompose.router.push
-import com.arkivanov.decompose.router.router
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.decompose.router.*
 import com.arkivanov.essenty.parcelable.Parcelable
 import ui.composables.SettingsUi
 import ui.composables.TranscriberUi
@@ -20,11 +16,13 @@ class RootComponent(private val applicationScope: ApplicationScope,
 
     private val router = router<RootConfiguration, Content>(
         initialConfiguration = RootConfiguration.Transcriber,
+        handleBackButton = true,
         childFactory = ::createChild
     )
 
     val routerState = router.state
     val isVisible = mutableStateOf(true)
+    val isTop = mutableStateOf(false)
     val darkTheme = mutableStateOf(false)
     fun onClose(){
         applicationScope.exitApplication()
@@ -33,24 +31,22 @@ class RootComponent(private val applicationScope: ApplicationScope,
         router.push(RootConfiguration.Settings)
     }
     private fun createChild(configuration: RootConfiguration, componentContext: ComponentContext): Content = when (configuration) {
-        is RootConfiguration.Transcriber -> transcriber()
-        is RootConfiguration.Settings -> settings()
+        is RootConfiguration.Transcriber -> transcriber(componentContext)
+        is RootConfiguration.Settings -> settings(componentContext)
     }
 
-    private fun transcriber(): Content = TranscriberComponent(
-        componentContext = childContext(
-            key = "Transcriber",
-            lifecycle = LifecycleRegistry()
-        )
+    private fun transcriber(componentContext: ComponentContext): Content = TranscriberComponent(
+        componentContext = componentContext,
+        openSettings = {router.push(RootConfiguration.Settings)},
+        closeWindow = {isVisible.value = false}
     ).asContent { TranscriberUi(it) }
 
-    private fun settings(): Content = SettingsComponent(
-        componentContext = childContext(
-            key = "Settings",
-            lifecycle = LifecycleRegistry()
-        ),
-        onClose = {router.pop()},
-        changeTheme = {darkTheme.value = !darkTheme.value}
+    private fun settings(componentContext: ComponentContext): Content = SettingsComponent(
+        componentContext = componentContext,
+        onBack = {isVisible.value = false},
+        onNext = {router.pop()},
+        theme = darkTheme,
+        alwaysTop = isTop
     ).asContent { SettingsUi(it) }
 
     sealed class RootConfiguration : Parcelable {

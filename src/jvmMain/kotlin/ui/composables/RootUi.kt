@@ -5,6 +5,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
@@ -21,16 +23,17 @@ fun RootUi(component: RootComponent) {
         visible = component.isVisible.value,
         undecorated = true,
         resizable = false,
+        alwaysOnTop = component.isTop.value,
         state = WindowState(
             size = DpSize(350.dp, 700.dp),
-            position = WindowPosition(Alignment.BottomEnd)
+            position = WindowPosition(Alignment.BottomEnd),
         )
-    ) {
-        Scaffold(
-            topBar = { TopBarUi(component) },
-
         ) {
-            Children(component.routerState, modifier = Modifier.padding(bottom=36.dp)) { child -> child.instance() }
+        MaterialTheme{
+            Children(
+                component.routerState,
+                modifier = Modifier.padding(bottom = 36.dp)
+            ) { child -> child.instance() }
         }
     }
 }

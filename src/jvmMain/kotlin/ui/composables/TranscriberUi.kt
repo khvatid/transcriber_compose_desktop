@@ -10,28 +10,33 @@ import util.IconRes
 
 @Composable
 fun TranscriberUi(component: TranscriberComponent) {
-    Column(modifier = Modifier.padding(16.dp).fillMaxSize(),
-    verticalArrangement = Arrangement.SpaceBetween) {
-        Box(modifier = Modifier.weight(6.2f)){
-            OutlinedTextField(
-                value = component.defaultText.value,
-                onValueChange = {component.defaultText.value = it},
-                label = { Text("Количество символов ${component.defaultText.value}")},
-                modifier = Modifier.fillMaxSize())
-        }
-        Row(modifier = Modifier.fillMaxWidth().weight(0.8f).padding(top = 10.dp)){
-            OutlinedButton(onClick = {component.transcript()}){
-                Text("Выполнить")
+
+    Scaffold(
+        topBar= { TopBarUi(component) }
+    ){
+        Column(modifier = Modifier.padding(16.dp).fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween) {
+            Box(modifier = Modifier.weight(6.2f)){
+                OutlinedTextField(
+                    value = component.defaultText.value,
+                    onValueChange = {component.defaultText.value = it},
+                    label = { Text("Количество символов ${component.defaultText.value.length}")},
+                    modifier = Modifier.fillMaxSize())
             }
-            Spacer(Modifier.weight(1f,true))
-            IconButton(onClick = {component.pasteFromBuffer()}){
-                IconRes.paste()
-            }
-            IconButton(onClick = {component.saveToBuffer()}){
-                IconRes.copy()
-            }
-            IconButton(onClick = {component.clearText()}){
-                IconRes.trash()
+            Row(modifier = Modifier.fillMaxWidth().weight(0.8f).padding(top = 10.dp)){
+                OutlinedButton(onClick = {component.transcript()}){
+                    Text("Выполнить")
+                }
+                Spacer(Modifier.weight(1f,true))
+                IconButton(onClick = {component.pasteFromBuffer()}){
+                    IconRes.paste()
+                }
+                IconButton(onClick = {component.saveToBuffer()}){
+                    IconRes.copy()
+                }
+                IconButton(onClick = {component.clearText()}){
+                    IconRes.trash()
+                }
             }
         }
     }

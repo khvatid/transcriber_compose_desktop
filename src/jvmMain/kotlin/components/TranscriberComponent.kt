@@ -10,10 +10,13 @@ import java.awt.datatransfer.StringSelection
 import java.awt.datatransfer.UnsupportedFlavorException
 
 class TranscriberComponent(
+    closeWindow: ()->Unit,
+    openSettings: ()->Unit,
     componentContext: ComponentContext,
-) : ComponentContext by componentContext {
+) : ChildComponent ,ComponentContext by componentContext {
     val defaultText = mutableStateOf("")
-
+    override val onBack: () -> Unit = closeWindow
+    override val onNext: () -> Unit = openSettings
 
     fun saveToBuffer() {
         val save = StringSelection(defaultText.value)
